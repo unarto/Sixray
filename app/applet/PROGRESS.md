@@ -4,31 +4,31 @@
 2026-08-01
 
 ## Task
-Menghapus folder `libs` (berisi `hev-socks5-tunnel-bin` dan file binary .so) serta file `theme_patch.patch`.
+Menambahkan alur kerja GitHub Actions `build.yml` yang disesuaikan dengan struktur direktori proyek.
 
 ## Files Changed
-- (Dihapus) `libs/`
-- (Dihapus) `theme_patch.patch`
+- `.github/workflows/build.yml`
 
 ## Summary
-Sesuai instruksi dan tangkapan layar (screenshot), folder `libs` yang berisi biner `hev-socks5-tunnel-bin` untuk seluruh arsitektur (`arm64-v8a`, `armeabi-v7a`, `x86`, `x86_64`) serta file `theme_patch.patch` telah dihapus seluruhnya dari repositori agar proses sync / push ke GitHub berjalan bersih dan tanpa hambatan.
+File alur kerja GitHub Actions `.github/workflows/build.yml` telah dibuat dan disesuaikan secara khusus berdasarkan struktur repositori proyek saat ini (tanpa prefix direktori `V2rayNG/`). Seluruh path build, salinan pustaka `libhevtun`, pengunduhan `libv2ray.aar`, serta artefak APK yang dihasilkan telah diarahkan dengan tepat ke direktori modul `./app`.
 
 ## Technical Details
-- Menjalankan `rm -rf libs theme_patch.patch`.
-- Verifikasi konfirmasi bahwa folder `libs/` dan `theme_patch.patch` telah bersih.
+- Menghapus jalur direktori non-existing `V2rayNG/` dan menyesuaikan seluruh perintah ke `./app` (misal: `app/build.gradle.kts`, `out-file-path: app/libs/`, `path: ${{ github.workspace }}/app/build/outputs/apk/`).
+- Memperbarui versi action ke versi stabil terbaru (`actions/checkout@v4`, `actions/setup-java@v4`, `actions/cache/*@v4`, `actions/upload-artifact@v4`).
+- Menambahkan pemeriksaan kondisional aman saat melakukan build `compile-hevtun.sh` dan penandatanganan GPG.
 
 ## Impact Check
 - UI: Aman.
 - ViewModel: Aman.
 - Storage/MMKV: Aman.
 - Service: Aman.
-- JNI/Native: [PROTECTED_MODULE] Dihapus atas instruksi eksplisit user untuk persiapan sync ke GitHub.
-- Build System: Bersih untuk di-push ke GitHub.
+- JNI/Native: Aman.
+- Build System: Alur kerja GitHub Actions siap digunakan untuk build APK otomatis atau manual (workflow dispatch).
 
 ## Verification
-- Build status: N/A (Proses pembersihan repositori untuk push ke GitHub).
-- Testing status: N/A.
-- Remaining issue: -
+- Build status: File `.github/workflows/build.yml` berhasil dibuat.
+- Testing status: N/A (GitHub Actions Workflow).
+- Remaining issue: Tidak ada.
 
 ## Next Step
-- Repositori sudah siap untuk di-sync / push ke GitHub. Silakan lanjutkan push dari panel GitHub UI AI Studio.
+- Repositori siap di-push ke GitHub untuk menjalankan alur kerja build otomatis.

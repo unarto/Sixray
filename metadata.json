@@ -1,0 +1,8 @@
+{
+  "name": "SixRay Cepat",
+  "description": "A VPN proxy client based on V2Ray",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

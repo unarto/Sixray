@@ -21,25 +21,41 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Eksekusi Pasang Submodule
+      - name: Pasang Ulang Submodule
+        shell: bash
         run: |
-          # 1. AndroidLibXrayLite
-          git rm -rf AndroidLibXrayLite || true
-          rm -rf .git/modules/AndroidLibXrayLite || true
-          git config -f .gitmodules --remove-section submodule.AndroidLibXrayLite || true
-          git submodule add https://github.com/2dust/AndroidLibXrayLite AndroidLibXrayLite
+          set -e
 
-          # 2. hev-socks5-tunnel
-          git rm -rf hev-socks5-tunnel || true
-          rm -rf .git/modules/hev-socks5-tunnel || true
-          git config -f .gitmodules --remove-section submodule.hev-socks5-tunnel || true
-          git submodule add https://github.com/heiher/hev-socks5-tunnel hev-socks5-tunnel
+          reset_submodule() {
+            local NAME="$1"
+            local URL="$2"
 
-          git submodule update --init --recursive
+            echo "=== Reset $NAME ==="
+
+            git submodule deinit -f "$NAME" 2>/dev/null || true
+            git rm -f "$NAME" 2>/dev/null || true
+
+            rm -rf ".git/modules/$NAME"
+            rm -rf "$NAME"
+
+            git config -f .gitmodules --remove-section "submodule.$NAME" 2>/dev/null || true
+
+            git submodule add "$URL" "$NAME"
+          }
+
+          reset_submodule "AndroidLibXrayLite" "https://github.com/2dust/AndroidLibXrayLite"
+          reset_submodule "hev-socks5-tunnel" "https://github.com/heiher/hev-socks5-tunnel"
+
           git submodule sync --recursive
+          git submodule update --init --recursive
 
-          git add .
-          git commit -m "🤖 Bot: Pasang ulang submodule AndroidLibXrayLite dan hev-socks5-tunnel" || true
-          
-          # Push otomatis ke branch di mana workflow ini dijalankan (master/main)
-          git push origin HEAD:${GITHUB_REF#refs/heads/}
+          git add .gitmodules
+          git add AndroidLibXrayLite
+          git add hev-socks5-tunnel
+
+          if ! git diff --cached --quiet; then
+            git commit -m "🤖 Bot: Pasang ulang submodule AndroidLibXrayLite dan hev-socks5-tunnel"
+            git push origin HEAD:${GITHUB_REF#refs/heads/}
+          else
+            echo "Tidak ada perubahan."
+          fi

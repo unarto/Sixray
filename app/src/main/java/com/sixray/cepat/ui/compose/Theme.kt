@@ -42,9 +42,9 @@ private val LightColor = lightColorScheme(
     errorContainer = Color(0xFFFFDAD6), // Light Red
     onError = Color(0xFFFFFFFF), // White
     onErrorContainer = Color(0xFF410002), // Dark Red
-    background = Color.Transparent, // Transparent
+    background = Color(0xFFFFFFFF).copy(alpha = 0.5f), // 50% Transparent White
     onBackground = Color(0xFF1C1B1F), // Near Black
-    surface = Color.Transparent, // Transparent
+    surface = Color(0xFFFFFFFF).copy(alpha = 0.5f), // 50% Transparent White
     onSurface = Color(0xFF1C1B1F), // Near Black
     surfaceVariant = Color(0xFFE7E0EC), // Light Purple Gray
     onSurfaceVariant = Color(0xFF49454F), // Dark Gray

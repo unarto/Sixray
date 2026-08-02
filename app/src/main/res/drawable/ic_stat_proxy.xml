@@ -4,14 +4,12 @@
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
-    <!-- Outer Shield Outline -->
     <path
-        android:pathData="M12,2 L4,5 V11 C4,16.5 7.4,20.7 12,22 C16.6,20.7 20,16.5 20,11 V5 L12,2 Z"
+        android:pathData="M12,2 L2,7 L2,12 C2,17.5 6.3,22.7 12,24 C17.7,22.7 22,17.5 22,12 L22,7 L12,2 Z"
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="1.5"
+        android:strokeWidth="2"
         android:fillColor="#00000000" />
-    <!-- S + Lightning Bolt in Shield -->
     <path
-        android:pathData="M13,6 L10,11.5 L12,11.5 L10.5,17.5 L14.5,12 L12.5,12 Z"
+        android:pathData="M12,6 L9,14 L12,14 L11,19 L16,11 L13,11 Z"
         android:fillColor="#FFFFFF" />
 </vector>

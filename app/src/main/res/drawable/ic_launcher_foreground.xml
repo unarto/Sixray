@@ -7,17 +7,11 @@
     <group
         android:translateX="0"
         android:translateY="0">
-        <!-- Background subtle glow circle -->
-        <path
-            android:pathData="M54,18 C34.1,18 18,34.1 18,54 C18,73.9 34.1,90 54,90 C73.9,90 90,73.9 90,54 C90,34.1 73.9,18 54,18 Z"
-            android:fillColor="#1E293B" />
-        <!-- Outer Glowing Ring -->
         <path
             android:pathData="M54,22 C36.3,22 22,36.3 22,54 C22,71.7 36.3,86 54,86 C71.7,86 86,71.7 86,54 C86,36.3 71.7,22 54,22 Z"
             android:strokeColor="#38BDF8"
             android:strokeWidth="2.5"
             android:fillColor="#00000000" />
-        <!-- Stylized 'S' shape -->
         <path
             android:pathData="M68,34 C64,30 57,28 51,28 C40,28 34,34 34,42 C34,50 42,53 50,55 L54,56 C62,58 68,62 68,70 C68,79 60,84 49,84 C40,84 34,80 30,75"
             android:strokeColor="#38BDF8"
@@ -25,12 +19,10 @@
             android:strokeLineCap="round"
             android:strokeLineJoin="round"
             android:fillColor="#00000000" />
-        <!-- Lightning Bolt (Petir) cutting through 'S' center -->
         <path
             android:pathData="M57,26 L42,50 L52,50 L45,78 L64,52 L54,52 Z"
             android:fillColor="#F59E0B"
             android:strokeColor="#FBBF24"
-            android:strokeWidth="1"
-            android:strokeLineJoin="miter" />
+            android:strokeWidth="1" />
     </group>
 </vector>

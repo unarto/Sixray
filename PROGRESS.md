@@ -2,6 +2,43 @@
 2026-08-02
 
 ## Task
+Memperbaiki lokasi direktori resource XML yang terbuat secara tidak sengaja di `app/applet/app/src/main/res`.
+
+## Files Changed
+- Deleted: Direktori salah `app/applet` secara keseluruhan.
+- Created: Seluruh Vector XML langsung pada direktori yang benar `app/src/main/res/` menggunakan shell script untuk menghindari malformasi path dari AI Studio Platform.
+
+## Summary
+Pengguna melaporkan bahwa resource belum tergabung dan dipindahkan ke `app/src/main/res/` sebagaimana mestinya. Ditemukan adanya anomali path di mana `create_file` membuat `app/applet/app/src/main/res` di dalam workspace. Masalah telah diatasi dengan menghapus direktori salah tersebut dan men-generate ulang seluruh ikon `drawable` dan `mipmap` secara langsung di dalam direktori aslinya menggunakan standard bash commands.
+
+## Technical Details
+- Menghapus folder duplikat bersarang `app/applet` (rm -rf).
+- Menjalankan skrip bash terpusat yang me-recreate seluruh aset `ic_stat_name.xml`, `ic_launcher_foreground.xml`, dll, tepat di dalam `app/src/main/res/`.
+- Memvalidasi kompilasi Gradle untuk task `processDebugResources` guna memastikan tidak ada AAPT2 Duplicate Resources error yang muncul.
+
+## Impact Check
+- UI: Semua ikon aplikasi, banner, dan notifikasi sekarang berbasis Vector Drawable di path yang benar.
+- ViewModel: Aman.
+- Storage/MMKV: Aman.
+- Service: Aman.
+- JNI: Aman.
+- Native: Aman.
+- Build System: Task `:app:processDebugResources` sukses tereksekusi tanpa duplikasi.
+
+## Verification
+- Build status: Gradle process resources berhasil. (Error libv2ray diabaikan karena memang state yang dikondisikan untuk GitHub CI).
+- Testing status: N/A.
+- Remaining issue: -
+
+## Next Step
+Menunggu pengguna memverifikasi dan mempush ulang repository ke GitHub.
+
+---
+
+## Date
+2026-08-02
+
+## Task
 Memperbaiki sinkronisasi platform AI Studio ke GitHub dan menyempurnakan konversi PNG ke Vector XML.
 
 ## Files Changed

@@ -36,50 +36,38 @@ jobs:
           --channel=0 \
           --install "ndk;29.0.14206865"
         echo "NDK_HOME=$ANDROID_HOME/ndk/29.0.14206865" >> $GITHUB_ENV
-        sed -i '10i\
-        \
-            ndkVersion = "29.0.14206865"' ${{ github.workspace }}/app/build.gradle.kts
-      # BUILD HEV SOCKS5 TUNNEL
-      # ==================================================
+        sed -i '10i\        \            ndkVersion = "29.0.14206865"' ${{ github.workspace }}/app/build.gradle.kts
 
-      - name: Restore cached HEV
-        id: cache-hev
-        uses: actions/cache/restore@v4
-        with:
-          path: app/src/main/jniLibs
-          key: |
-            hevtun-${{ runner.os }}-${{ hashFiles(
-            'hev-socks5-tunnel/**',
-            'compile-hevtun.sh'
-            ) }}
+    - name: Restore cached libhevtun
+      id: cache-libhevtun-restore
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ github.workspace }}/libs
+        key: libhevtun-${{ runner.os }}-${{ env.NDK_HOME }}-${{ hashFiles('compile-hevtun.sh') }}
 
+    - name: Build libhevtun
+      if: steps.cache-libhevtun-restore.outputs.cache-hit != 'true'
+      run: |
+        if [ ! -d "hev-socks5-tunnel" ]; then
+          echo "Error: hev-socks5-tunnel directory not found."
+          exit 1
+        fi
 
-      - name: Build HEV SOCKS5 Tunnel
-        if: steps.cache-hev.outputs.cache-hit != 'true'
-        env:
-          NDK_HOME: ${{ env.NDK_HOME }}
-        run: |
+        chmod +x compile-hevtun.sh
+        bash compile-hevtun.sh
 
-          if [ ! -d "hev-socks5-tunnel" ]; then
-            echo "hev-socks5-tunnel tidak ditemukan"
-            exit 1
-          fi
+    - name: Save libhevtun
+      if: steps.cache-libhevtun-restore.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ github.workspace }}/libs
+        key: libhevtun-${{ runner.os }}-${{ env.NDK_HOME }}-${{ hashFiles('compile-hevtun.sh') }}
 
-          chmod +x compile-hevtun.sh
-          bash compile-hevtun.sh
-
-
-
-      - name: Save cached HEV
-        if: steps.cache-hev.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: app/src/main/jniLibs
-          key: |
-            hevtun-${{ runner.os }}-${{ hashFiles(
-            'hev-socks5-tunnel/**',
-            'compile-hevtun.sh'
-            ) }}
+    - name: Copy libhevtun
+      run: |
+        if [ -d "${{ github.workspace }}/libs" ]; then
+          cp -r ${{ github.workspace }}/libs ${{ github.workspace }}/app
+        fi
 
     - name: Fetch AndroidLibXrayLite tag
       run: |
@@ -107,14 +95,11 @@ jobs:
         distribution: 'temurin'
         java-version: '21'
 
-      # --- BAGIAN OTOMATISASI JAR ---
     - name: Fix Gradle Wrapper (Otomatis tiap Build)
       run: |
         echo "--- Memastikan Gradle Wrapper selalu fresh ---"
         rm -rf gradle/wrapper/gradle-wrapper.jar
-        # Generate ulang wrapper supaya gak korup
         gradle wrapper --gradle-version 9.5.1
-      # ------------------------------
 
     - name: Decode Keystore
       uses: timheuer/base64-to-file@v2.0.0
@@ -127,35 +112,39 @@ jobs:
       run: |
         echo "sdk.dir=${ANDROID_HOME}" > local.properties
         chmod 755 gradlew
-        ./gradlew assembleRelease -Pandroid.injected.signing.store.file=${{ steps.android_keystore.outputs.filePath }} -Pandroid.injected.signing.store.password=${{ secrets.APP_KEYSTORE_PASSWORD }} -Pandroid.injected.signing.key.alias=${{ secrets.APP_KEYSTORE_ALIAS }} -Pandroid.injected.signing.key.password=${{ secrets.APP_KEY_PASSWORD }}
-    
+        ./gradlew assembleRelease \
+          -Pandroid.injected.signing.store.file=${{ steps.android_keystore.outputs.filePath }} \
+          -Pandroid.injected.signing.store.password=${{ secrets.APP_KEYSTORE_PASSWORD }} \
+          -Pandroid.injected.signing.key.alias=${{ secrets.APP_KEYSTORE_ALIAS }} \
+          -Pandroid.injected.signing.key.password=${{ secrets.APP_KEY_PASSWORD }}
+
     - name: Upload arm64-v8a APK
       uses: actions/upload-artifact@v4
-      if: ${{ success() }}
+      if: success()
       with:
         name: arm64-v8a
-        path: ${{ github.workspace }}/app/build/outputs/apk/*/release/*arm64-v8a*.apk
+        path: app/build/outputs/apk/*/release/*arm64-v8a*.apk
 
     - name: Upload armeabi-v7a APK
       uses: actions/upload-artifact@v4
-      if: ${{ success() }}
+      if: success()
       with:
         name: armeabi-v7a
-        path: ${{ github.workspace }}/app/build/outputs/apk/*/release/*armeabi-v7a*.apk
+        path: app/build/outputs/apk/*/release/*armeabi-v7a*.apk
 
     - name: Upload x86 APK
       uses: actions/upload-artifact@v4
-      if: ${{ success() }}
+      if: success()
       with:
         name: x86-apk
-        path: ${{ github.workspace }}/app/build/outputs/apk/*/release/*x86*.apk
+        path: app/build/outputs/apk/*/release/*x86*.apk
 
     - name: Upload universal / release APK
       uses: actions/upload-artifact@v4
-      if: ${{ success() }}
+      if: success()
       with:
         name: release-apk
-        path: ${{ github.workspace }}/app/build/outputs/apk/**/*.apk
+        path: app/build/outputs/apk/**/*.apk
 
   sign-and-release:
     needs: build
@@ -172,12 +161,17 @@ jobs:
         run: |
           printf '%s' "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import || true
           KEY=$(gpg --list-secret-keys --with-colons | awk -F: '/^fpr:/ {print $10; exit}')
+
           mkdir -p release-files
 
           find release -type f -name '*.apk' | while read apk; do
             cp "$apk" release-files/
             if [ -n "$KEY" ]; then
-              gpg --batch --yes --local-user "$KEY" --detach-sign --output "release-files/$(basename "$apk").sig" "$apk"
+              gpg --batch --yes \
+                --local-user "$KEY" \
+                --detach-sign \
+                --output "release-files/$(basename "$apk").sig" \
+                "$apk"
             fi
           done
 

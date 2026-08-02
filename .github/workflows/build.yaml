@@ -39,34 +39,47 @@ jobs:
         sed -i '10i\
         \
             ndkVersion = "29.0.14206865"' ${{ github.workspace }}/app/build.gradle.kts
+      # BUILD HEV SOCKS5 TUNNEL
+      # ==================================================
 
-    - name: Restore cached libhevtun
-      id: cache-libhevtun-restore
-      uses: actions/cache/restore@v4
-      with:
-        path: ${{ github.workspace }}/libs
-        key: libhevtun-${{ runner.os }}-${{ env.NDK_HOME }}-${{ hashFiles('compile-hevtun.sh') }}
+      - name: Restore cached HEV
+        id: cache-hev
+        uses: actions/cache/restore@v4
+        with:
+          path: app/src/main/jniLibs
+          key: |
+            hevtun-${{ runner.os }}-${{ hashFiles(
+            'hev-socks5-tunnel/**',
+            'compile-hevtun.sh'
+            ) }}
 
-    - name: Build libhevtun
-      if: steps.cache-libhevtun-restore.outputs.cache-hit != 'true'
-      run: |
-        if [ -f "compile-hevtun.sh" ]; then
+
+      - name: Build HEV SOCKS5 Tunnel
+        if: steps.cache-hev.outputs.cache-hit != 'true'
+        env:
+          NDK_HOME: ${{ env.NDK_HOME }}
+        run: |
+
+          if [ ! -d "hev-socks5-tunnel" ]; then
+            echo "hev-socks5-tunnel tidak ditemukan"
+            exit 1
+          fi
+
           chmod +x compile-hevtun.sh
-          bash compile-hevtun.sh || echo "libhevtun build skipped or handled"
-        fi
-    
-    - name: Save libhevtun
-      if: steps.cache-libhevtun-restore.outputs.cache-hit != 'true'
-      uses: actions/cache/save@v4
-      with:
-        path: ${{ github.workspace }}/libs
-        key: libhevtun-${{ runner.os }}-${{ env.NDK_HOME }}-${{ hashFiles('compile-hevtun.sh') }}
+          bash compile-hevtun.sh
 
-    - name: Copy libhevtun
-      run: |
-        if [ -d "${{ github.workspace }}/libs" ]; then
-          cp -r ${{ github.workspace }}/libs ${{ github.workspace }}/app
-        fi
+
+
+      - name: Save cached HEV
+        if: steps.cache-hev.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: app/src/main/jniLibs
+          key: |
+            hevtun-${{ runner.os }}-${{ hashFiles(
+            'hev-socks5-tunnel/**',
+            'compile-hevtun.sh'
+            ) }}
 
     - name: Fetch AndroidLibXrayLite tag
       run: |

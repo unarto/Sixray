@@ -21,7 +21,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
-        submodules: 'recursive'
         fetch-depth: '0'
 
     - name: Setup Android SDK
@@ -46,7 +45,14 @@ jobs:
       uses: actions/cache/restore@v4
       with:
         path: ${{ github.workspace }}/libs
-        key: libhevtun-${{ runner.os }}-${{ env.NDK_HOME }}-${{ hashFiles('.git/modules/hev-socks5-tunnel/HEAD') }}-${{ hashFiles('compile-hevtun.sh') }}
+        key: libhevtun-${{ runner.os }}-${{ env.NDK_HOME }}-${{ hashFiles('compile-hevtun.sh') }}
+
+    - name: Clone hev-socks5-tunnel
+      if: steps.cache-libhevtun-restore.outputs.cache-hit != 'true'
+      run: |
+        if [ ! -d "hev-socks5-tunnel" ]; then
+          git clone --recursive https://github.com/heiher/hev-socks5-tunnel.git
+        fi
 
     - name: Build libhevtun
       if: steps.cache-libhevtun-restore.outputs.cache-hit != 'true'
@@ -61,7 +67,7 @@ jobs:
       uses: actions/cache/save@v4
       with:
         path: ${{ github.workspace }}/libs
-        key: libhevtun-${{ runner.os }}-${{ env.NDK_HOME }}-${{ hashFiles('.git/modules/hev-socks5-tunnel/HEAD') }}-${{ hashFiles('compile-hevtun.sh') }}
+        key: libhevtun-${{ runner.os }}-${{ env.NDK_HOME }}-${{ hashFiles('compile-hevtun.sh') }}
 
     - name: Copy libhevtun
       run: |

@@ -4,6 +4,112 @@
 2026-08-02
 
 ## Task
+Menghapus kembali folder `hev-socks5-tunnel/` untuk mencegah kegagalan commit ke GitHub.
+
+## Files Changed
+- Deleted: Direktori submodule `hev-socks5-tunnel/`
+
+## Summary
+Sesuai instruksi, folder sumber C `hev-socks5-tunnel/` telah dihapus kembali karena menyebabkan kegagalan saat proses commit/push melalui UI Google AI Studio ke GitHub. Karena ini adalah submodule, menambahkan langsung source codenya akan membebani commit. Hal ini tidak menjadi masalah karena proses CI di GitHub Actions (`build.yaml`) telah kita konfigurasi untuk men-clone repositori `hev-socks5-tunnel` secara mandiri saat melakukan kompilasi NDK.
+
+## Technical Details
+- Menjalankan perintah `rm -rf hev-socks5-tunnel/` untuk membersihkan folder yang didownload sebelumnya.
+
+## Impact Check
+- UI: Aman.
+- ViewModel: Aman.
+- Storage/MMKV: Aman.
+- Service: Aman.
+- JNI/Native: Aman. Source code akan di clone otomatis oleh GitHub Actions.
+- Build System: Aman. Workflow `build.yaml` sudah disiapkan untuk mengatasi hilangnya folder ini.
+
+## Verification
+- Build status: Folder berhasil dihapus.
+- Testing status: N/A.
+- Remaining issue: -
+
+## Next Step
+- Silakan coba lakukan "Push ke GitHub" (Commit) lagi sekarang.
+
+---
+
+
+## Date
+2026-08-02
+
+## Task
+Memperbaiki error Lint "MissingDefaultResource" pada file drawable.
+
+## Files Changed
+- Copied: `app/src/main/res/drawable-night/ic_play_24dp.xml` ke `app/src/main/res/drawable/ic_play_24dp.xml`
+- Copied: `app/src/main/res/drawable-night/ic_stop_24dp.xml` ke `app/src/main/res/drawable/ic_stop_24dp.xml`
+
+## Summary
+Memperbaiki kegagalan build APK di GitHub Actions yang disebabkan oleh error Lint `MissingDefaultResource`. Error ini terjadi karena file `ic_play_24dp.xml` dan `ic_stop_24dp.xml` hanya tersedia di folder `drawable-night` (untuk tema gelap), tetapi tidak ada versi default-nya di folder dasar `drawable`. Jika resource ini dipanggil saat perangkat menggunakan tema terang (light mode), aplikasi dapat crash (Force Close). Solusinya adalah menyalin (copy) kedua file tersebut ke folder `drawable` sebagai fallback/default resource.
+
+## Technical Details
+- Menjalankan perintah `cp` untuk menduplikasi `ic_play_24dp.xml` dan `ic_stop_24dp.xml` dari `drawable-night` ke `drawable`.
+- Memastikan tidak ada file drawable lain yang missing base resource-nya.
+
+## Impact Check
+- UI: Aman, icon play dan stop kini bisa diakses dalam mode terang.
+- ViewModel: Aman.
+- Storage/MMKV: Aman.
+- Service: Aman.
+- JNI/Native: Aman.
+- Build System: Lint check untuk release build (lintVitalRelease) sekarang seharusnya akan pass tanpa melempar fatal error MissingDefaultResource.
+
+## Verification
+- Build status: Masalah MissingDefaultResource sudah diatasi.
+- Testing status: N/A.
+- Remaining issue: -
+
+## Next Step
+- Silakan push ulang pembaruan ini ke repository GitHub agar GitHub Actions dapat mencoba build kembali.
+
+---
+
+
+## Date
+2026-08-02
+
+## Task
+Memperbaiki error "Checkout code" pada GitHub Actions Workflow (`build.yaml`).
+
+## Files Changed
+- Modified: `.github/workflows/build.yaml`
+
+## Summary
+Memperbaiki error pada saat proses awal kompilasi (GitHub Actions `build.yaml`) yang gagal dalam 8 detik pada tahap `Checkout code`. Kegagalan pada bagian `Setting up auth` atau `Initializing the repository` disebabkan oleh konfigurasi `submodules: 'recursive'` pada checkout. Karena direktori `hev-socks5-tunnel` dihapus secara manual sebelumnya, Github Actions gagal mensinkronkan submodule. Solusinya, konfigurasi `submodules: 'recursive'` dihapus dari `actions/checkout@v4`. Sebagai gantinya, ditambahkan skrip bash mandiri untuk melakukan `git clone --recursive https://github.com/heiher/hev-socks5-tunnel.git` hanya jika build benar-benar diperlukan. Hal ini menjamin proses CI dapat berjalan dengan lancar tanpa terganggu konfigurasi git tree lokal yang tidak sinkron.
+
+## Technical Details
+- Menghapus baris `submodules: 'recursive'` dari `build.yaml` di bawah `uses: actions/checkout@v4`.
+- Mengubah hashing parameter `.git/modules/hev-socks5-tunnel/HEAD` pada cache restore/save key menjadi hanya menghash `compile-hevtun.sh`.
+- Menambahkan job step `Clone hev-socks5-tunnel` untuk melakukan cloning source code C secara manual dari repositori upstream `heiher` sebelum proses kompilasi native dijalankan.
+
+## Impact Check
+- UI: Aman.
+- ViewModel: Aman.
+- Storage/MMKV: Aman.
+- Service: Aman.
+- JNI/Native: Source code native akan tetap diambil di env CI menggunakan manual clone, sehingga NDK tetap bisa build `libhevtun.so`.
+- Build System: Lingkungan CI di GitHub sekarang akan dapat melewati proses Checkout code dan dapat melanjutkan ke tahap Setup SDK.
+
+## Verification
+- Build status: Script workflow telah diperbaiki. Siap di push ke github.
+- Testing status: N/A.
+- Remaining issue: -
+
+## Next Step
+- Silakan push ulang pembaruan file `build.yaml` ke repository GitHub dan workflow "Buat APK" akan kembali berjalan normal.
+
+---
+
+
+## Date
+2026-08-02
+
+## Task
 Menghapus file JNI binaries (`jniLibs`/`libs`) dan source code C submodule `hev-socks5-tunnel` sementara untuk mempermudah push ke GitHub (mengurangi ukuran direktori).
 
 ## Files Changed

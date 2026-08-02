@@ -47,13 +47,6 @@ jobs:
         path: ${{ github.workspace }}/libs
         key: libhevtun-${{ runner.os }}-${{ env.NDK_HOME }}-${{ hashFiles('compile-hevtun.sh') }}
 
-    - name: Clone hev-socks5-tunnel
-      if: steps.cache-libhevtun-restore.outputs.cache-hit != 'true'
-      run: |
-        if [ ! -d "hev-socks5-tunnel" ]; then
-          git clone --recursive https://github.com/heiher/hev-socks5-tunnel.git
-        fi
-
     - name: Build libhevtun
       if: steps.cache-libhevtun-restore.outputs.cache-hit != 'true'
       run: |

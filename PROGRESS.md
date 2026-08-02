@@ -2,6 +2,44 @@
 2026-08-02
 
 ## Task
+Memperbaiki GitHub Actions Build Error (Unresolved reference pada CoreNativeManager dan CoreServiceManager).
+
+## Files Changed
+- Modified: `.github/workflows/build.yaml` (Memperbarui tag `libv2ray.aar` yang diunduh menjadi `v26.7.31` secara paksa).
+
+## Summary
+Pengguna melaporkan kegagalan pada proses `compileReleaseKotlin` di GitHub Actions karena method baru seperti `reconcileBrowserDialer`, `ProcessFinder`, dan `fetchQuicCertSha256` tidak ditemukan (Unresolved reference). Penyebabnya adalah workflow secara dinamis membaca tag dari submodule `AndroidLibXrayLite` yang masih berada di versi lama (`v26.1.23`), sehingga CI mengunduh versi lama dari `libv2ray.aar`. 
+
+Masalah ini telah diatasi dengan memaksa (hardcode) `CURRENT_TAG="v26.7.31"` di dalam `.github/workflows/build.yaml` agar runner GitHub Actions selalu mengunduh versi terbaru yang kompatibel dengan source code saat ini.
+
+Selain itu, terkait direktori `app/applet/app/src/main/res` yang duplikat, **masalah ini sudah ditangani pada langkah sebelumnya**. Folder duplikat tersebut sudah dihapus dan semua icon XML telah di-generate pada path asli `app/src/main/res/` dengan benar.
+
+## Technical Details
+- Menjalankan `sed` pada `build.yaml` untuk mengubah baris `CURRENT_TAG=` menjadi `CURRENT_TAG="v26.7.31"`.
+- Memverifikasi keberadaan method pada file `classes.jar` dari rilis `v26.7.31`.
+
+## Impact Check
+- UI: Aman.
+- ViewModel: Aman.
+- Storage/MMKV: Aman.
+- Service: Aman.
+- JNI/Native: Aman. (Kompatibilitas JNI dan file .so tetap terjamin).
+- Build System: GitHub Actions pipeline sekarang akan menggunakan `v26.7.31` untuk `libv2ray.aar` yang memiliki fungsi-fungsi yang dibutuhkan.
+
+## Verification
+- Build status: Siap untuk dicoba ulang di GitHub Actions.
+- Testing status: N/A.
+- Remaining issue: -
+
+## Next Step
+Menunggu pengguna memverifikasi (push) perubahan ini ke GitHub dan memastikan pipeline berjalan lancar.
+
+---
+
+## Date
+2026-08-02
+
+## Task
 Memperbaiki lokasi direktori resource XML yang terbuat secara tidak sengaja di `app/applet/app/src/main/res`.
 
 ## Files Changed

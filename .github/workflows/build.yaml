@@ -79,12 +79,12 @@ jobs:
       run: |
         if [ -d "AndroidLibXrayLite" ]; then
           pushd AndroidLibXrayLite
-          CURRENT_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v26.1.23")
+          CURRENT_TAG="v26.7.31"
           echo "Current tag in this repo: $CURRENT_TAG"
           echo "CURRENT_TAG=$CURRENT_TAG" >> $GITHUB_ENV
           popd
         else
-          echo "CURRENT_TAG=v26.1.23" >> $GITHUB_ENV
+          echo "CURRENT_TAG=v26.7.31" >> $GITHUB_ENV
         fi
 
     - name: Download libv2ray

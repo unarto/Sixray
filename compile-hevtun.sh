@@ -2,17 +2,14 @@
 set -o errexit
 set -o pipefail
 set -o nounset
-
 # Set magic variables for current file & dir
 __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 __file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
 __base="$(basename ${__file} .sh)"
-
 if [[ ! -d $NDK_HOME ]]; then
   echo "Android NDK: NDK_HOME not found. please set env \$NDK_HOME"
   exit 1
 fi
-
 TMPDIR=$(mktemp -d)
 clear_tmp () {
   rm -rf $TMPDIR
@@ -44,7 +41,6 @@ echo 'include $(call all-subdir-makefiles)' > jni/Android.mk
 #    process by com.sixray.cepat.core.root for the Root run mode. Same hev source,
 #    no -DENABLE_LIBRARY so hev-main.c's main() is built, and BUILD_EXECUTABLE
 #    instead of a shared library. It creates its own tun and reads a YAML config.
-
 cat > jni/exec.mk <<'EXECMK'
 TOP_PATH := $(call my-dir)/hev-socks5-tunnel
 
@@ -63,10 +59,8 @@ SRCDIR := $(LOCAL_PATH)/src
 
 include $(CLEAR_VARS)
 include $(LOCAL_PATH)/build.mk
-
 LOCAL_MODULE    := hevsockstun
 LOCAL_SRC_FILES := $(patsubst $(SRCDIR)/%,src/%,$(SRCFILES))
-
 LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/src \
 	$(LOCAL_PATH)/src/misc \
@@ -75,19 +69,14 @@ LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/third-part/lwip/src/include \
 	$(LOCAL_PATH)/third-part/lwip/src/ports/include \
 	$(LOCAL_PATH)/third-part/hev-task-system/include
-
 LOCAL_CFLAGS += -DFD_SET_DEFINED -DSOCKLEN_T_DEFINED
 LOCAL_CFLAGS += $(VERSION_CFLAGS)
-
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 LOCAL_CFLAGS += -mfpu=neon
 endif
-
 LOCAL_STATIC_LIBRARIES := yaml lwip hev-task-system
-
 LOCAL_LDFLAGS += -Wl,-z,max-page-size=16384
 LOCAL_LDFLAGS += -Wl,-z,common-page-size=16384
-
 include $(BUILD_EXECUTABLE)
 EXECMK
 
@@ -104,10 +93,8 @@ EXECMK
 # Stage both artifacts under libs/<abi>/. The executable is renamed to
 # lib*.so so the APK installer extracts it into nativeLibraryDir as an
 # executable file (filename distinct from the JNI library above).
-
 mkdir -p "$__dir/libs"
 cp -r "$TMPDIR/libs/"* "$__dir/libs/"
-
 for abi in $ABIS; do
   cp "$TMPDIR/libs-exec/$abi/hevsockstun" "$__dir/libs/$abi/libhevsockstun.so"
 done

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="300dp"
+    android:height="160dp"
+    android:viewportWidth="300"
+    android:viewportHeight="160">
+    <!-- Light theme gradient background replacement -->
+    <path
+        android:pathData="M0,0h300v160h-300z"
+        android:fillColor="#2563EB" />
+    <!-- Geometric Overlay lines -->
+    <path
+        android:pathData="M-50,180 L180,-50 M0,200 L250,-50 M50,220 L300,-30"
+        android:strokeColor="#3B82F6"
+        android:strokeWidth="24" />
+    <!-- Subtle S-Lightning Emblem in Background -->
+    <group
+        android:translateX="180"
+        android:translateY="20"
+        android:scaleX="0.8"
+        android:scaleY="0.8">
+        <path
+            android:pathData="M68,34 C64,30 57,28 51,28 C40,28 34,34 34,42 C34,50 42,53 50,55 L54,56 C62,58 68,62 68,70 C68,79 60,84 49,84 C40,84 34,80 30,75"
+            android:strokeColor="#60A5FA"
+            android:strokeWidth="8"
+            android:strokeLineCap="round"
+            android:fillColor="#00000000" />
+        <path
+            android:pathData="M57,26 L42,50 L52,50 L45,78 L64,52 L54,52 Z"
+            android:fillColor="#F59E0B" />
+    </group>
+</vector>

@@ -8,7 +8,6 @@ on:
         type: string
   push:
     branches:
-      - master
       - main
 
 permissions:
@@ -95,6 +94,15 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '21'
+
+      # --- BAGIAN OTOMATISASI JAR ---
+    - name: Fix Gradle Wrapper (Otomatis tiap Build)
+      run: |
+        echo "--- Memastikan Gradle Wrapper selalu fresh ---"
+        rm -rf gradle/wrapper/gradle-wrapper.jar
+        # Generate ulang wrapper supaya gak korup
+        gradle wrapper --gradle-version 9.5.1
+      # ------------------------------
 
     - name: Decode Keystore
       uses: timheuer/base64-to-file@v2.0.0

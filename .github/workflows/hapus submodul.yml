@@ -1,0 +1,58 @@
+name: Hapus Submodule
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  remove-submodules:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ambil Source Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set Identity Bot
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Hapus Semua Submodule
+        shell: bash
+        run: |
+          set -e
+
+          remove_submodule() {
+            local NAME="$1"
+
+            echo "=== Menghapus $NAME ==="
+
+            git submodule deinit -f "$NAME" 2>/dev/null || true
+            git rm -f "$NAME" 2>/dev/null || true
+
+            rm -rf ".git/modules/$NAME"
+            rm -rf "$NAME"
+
+            git config -f .gitmodules --remove-section "submodule.$NAME" 2>/dev/null || true
+          }
+
+          remove_submodule "AndroidLibXrayLite"
+          remove_submodule "hev-socks5-tunnel"
+
+          # Hapus .gitmodules kalau sudah kosong
+          if [ -f .gitmodules ] && ! grep -q "\[submodule" .gitmodules; then
+            rm -f .gitmodules
+          fi
+
+          git add -A
+
+          if ! git diff --cached --quiet; then
+            git commit -m "🤖 Bot: Hapus seluruh submodule"
+            git push origin HEAD:${GITHUB_REF#refs/heads/}
+          else
+            echo "Tidak ada submodule untuk dihapus."
+          fi

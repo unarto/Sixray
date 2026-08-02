@@ -3,7 +3,7 @@
 *.jks
 
 # Ignore output JSON file
-Sixray/app/release/output.json
+app/release/output.json
 
 # Ignore IDE and build system directories
 .idea/
@@ -17,9 +17,9 @@ Sixray/app/release/output.json
 # Ignore build directories and captures
 /build
 /captures
-Sixray/app/build
-Sixray/build
-Sixray/local.properties
+app/build
+build
+local.properties
 
 # Ignore APK and AAR files
 *.apk
@@ -31,8 +31,8 @@ signing.properties
 # Ignore shared object files
 *.so
 
-# Ignore Google services JSON
-Sixray/app/google-services.json
+# Ignore Google services
+app/google-services.json
 
 # Additional common Android/Java ignores
 *.log

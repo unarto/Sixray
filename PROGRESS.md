@@ -2,6 +2,43 @@
 2026-08-02
 
 ## Task
+Memperbaiki GitHub Actions Build Error (Upload artifact failed for ABI splits).
+
+## Files Changed
+- Modified: `app/build.gradle.kts` (Menambahkan konfigurasi `splits.abi` untuk menghasilkan APK per arsitektur).
+
+## Summary
+Pengguna melaporkan pesan peringatan dari GitHub Actions bahwa `upload-artifact` gagal menemukan file `*arm64-v8a*.apk` dan `*armeabi-v7a*.apk`. Hal ini terjadi karena build system hanya dikonfigurasi untuk menghasilkan satu _universal APK_, sementara _workflow_ mendefinisikan artifact upload per arsitektur (ABI).
+
+Untuk menyelesaikannya, konfigurasi `splits.abi` telah ditambahkan ke dalam blok `android` di `app/build.gradle.kts`. Dengan konfigurasi ini, Gradle akan menghasilkan APK terpisah untuk `armeabi-v7a`, `arm64-v8a`, `x86`, dan `x86_64` sekaligus tetap mempertahankan `universal APK`. Workflow sekarang akan bisa menemukan dan mengunggah APK sesuai dengan arsirekturnya dengan sukses.
+
+Menjawab pertanyaan pengguna: **Xray core terbaru (v26) masih mensupport fitur allowInsecure**, meskipun fitur tersebut saat ini sudah dilabeli _deprecated_ oleh pihak Xray dan akan mengeluarkan warning pada log. Namun secara fungsional fitur ini masih beroperasi seperti biasa.
+
+## Technical Details
+- Menambahkan blok `splits { abi { isEnable = true; include("armeabi-v7a", "arm64-v8a", "x86", "x86_64"); isUniversalApk = true } }` pada `app/build.gradle.kts`.
+
+## Impact Check
+- UI: Aman.
+- ViewModel: Aman.
+- Storage/MMKV: Aman.
+- Service: Aman.
+- JNI/Native: Aman.
+- Build System: Output build `assembleRelease` sekarang menghasilkan file APK split berdasarkan ABI yang kompatibel dengan `build.yaml` pipeline.
+
+## Verification
+- Build status: Siap dijalankan ulang oleh GitHub Actions.
+- Testing status: N/A.
+- Remaining issue: -
+
+## Next Step
+Menunggu pengguna memverifikasi dan memastikan artifak terupload dengan sukses di GitHub release.
+
+---
+
+## Date
+2026-08-02
+
+## Task
 Memperbaiki GitHub Actions Build Error (Unresolved reference pada CoreNativeManager dan CoreServiceManager).
 
 ## Files Changed

@@ -16,6 +16,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -40,9 +41,10 @@ jobs:
         echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager \
           --channel=0 \
           --install "ndk;29.0.14206865"
+
         echo "NDK_HOME=$ANDROID_HOME/ndk/29.0.14206865" >> $GITHUB_ENV
-        sed -i '10i\
-        \            ndkVersion = "29.0.14206865"' app/build.gradle.kts
+
+        sed -i '10i\        \            ndkVersion = "29.0.14206865"' app/build.gradle.kts
 
     - name: Restore cached libhevtun
       id: cache-libhevtun-restore
@@ -55,12 +57,15 @@ jobs:
       if: steps.cache-libhevtun-restore.outputs.cache-hit != 'true'
       run: |
         set -e
+
         test -d hev-socks5-tunnel
         test -f hev-socks5-tunnel/Android.mk
         test -f hev-socks5-tunnel/build.mk
+
         test -f hev-socks5-tunnel/third-part/yaml/Android.mk
         test -f hev-socks5-tunnel/third-part/lwip/Android.mk
         test -f hev-socks5-tunnel/third-part/hev-task-system/Android.mk
+
         chmod +x compile-hevtun.sh
         ./compile-hevtun.sh
 
@@ -81,12 +86,12 @@ jobs:
       run: |
         if [ -d "AndroidLibXrayLite" ]; then
           pushd AndroidLibXrayLite
-          CURRENT_TAG="v26.1.23"
+          CURRENT_TAG="v26.7.31"
           echo "Current tag in this repo: $CURRENT_TAG"
           echo "CURRENT_TAG=$CURRENT_TAG" >> $GITHUB_ENV
           popd
         else
-          echo "CURRENT_TAG=v26.1.23" >> $GITHUB_ENV
+          echo "CURRENT_TAG=v26.7.31" >> $GITHUB_ENV
         fi
 
     - name: Download libv2ray
@@ -95,7 +100,7 @@ jobs:
         repository: '2dust/AndroidLibXrayLite'
         tag: ${{ env.CURRENT_TAG }}
         fileName: 'libv2ray.aar'
-        out-file-path: app/libs/ 
+        out-file-path: app/libs/
 
     - name: Setup Java
       uses: actions/setup-java@v4
@@ -127,21 +132,21 @@ jobs:
       if: ${{ success() }}
       with:
         name: arm64-v8a
-        path: ${{ github.workspace }}/app/build/outputs/apk/*/release/*arm64-v8a*.apk
+        path: ${{ github.workspace }}/app/build/outputs/apk/release/*arm64-v8a*.apk
 
     - name: Upload armeabi-v7a APK
       uses: actions/upload-artifact@v4
       if: ${{ success() }}
       with:
         name: armeabi-v7a
-        path: ${{ github.workspace }}/app/build/outputs/apk/*/release/*armeabi-v7a*.apk
+        path: ${{ github.workspace }}/app/build/outputs/apk/release/*armeabi-v7a*.apk
 
     - name: Upload x86 APK
       uses: actions/upload-artifact@v4
       if: ${{ success() }}
       with:
         name: x86-apk
-        path: ${{ github.workspace }}/app/build/outputs/apk/*/release/*x86*.apk
+        path: ${{ github.workspace }}/app/build/outputs/apk/release/*x86*.apk
 
     - name: Upload universal / release APK
       uses: actions/upload-artifact@v4

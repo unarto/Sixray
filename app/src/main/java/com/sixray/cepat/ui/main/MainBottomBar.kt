@@ -47,7 +47,7 @@ fun MainBottomBar(
                     .windowInsetsPadding(WindowInsets.navigationBars)
                     .height(64.dp)
                     .clickable(onClick = { onAction(MainAction.TestCurrentServer) }),
-                color = MaterialTheme.colorScheme.surface,
+                color = if (isDarkTheme) MaterialTheme.colorScheme.surface else Color.Transparent,
                 tonalElevation = 0.dp
             ) {
                 Row(
@@ -61,6 +61,7 @@ fun MainBottomBar(
                 }
             }
         }
+
         FloatingActionButton(
             onClick = { onAction(MainAction.ToggleService) },
             modifier = Modifier

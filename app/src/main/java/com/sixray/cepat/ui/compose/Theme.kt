@@ -42,9 +42,9 @@ private val LightColor = lightColorScheme(
     errorContainer = Color(0xFFFFDAD6), // Light Red
     onError = Color(0xFFFFFFFF), // White
     onErrorContainer = Color(0xFF410002), // Dark Red
-    background = Color(0xFFFFFFFF).copy(alpha = 0.5f), // 50% Transparent White
+    background = Color.Transparent, // Transparent
     onBackground = Color(0xFF1C1B1F), // Near Black
-    surface = Color(0xFFFFFFFF).copy(alpha = 0.5f), // 50% Transparent White
+    surface = Color(0xFFFFFFFF), // White
     onSurface = Color(0xFF1C1B1F), // Near Black
     surfaceVariant = Color(0xFFE7E0EC), // Light Purple Gray
     onSurfaceVariant = Color(0xFF49454F), // Dark Gray
@@ -154,7 +154,6 @@ fun AppTheme(
 ) {
     val colorScheme = if (darkTheme) DarkColor else LightColor
     val snackbarController = rememberAppSnackbarController()
-
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
@@ -183,6 +182,7 @@ fun AppTheme(
             } else {
                 Modifier.background(colorScheme.background)
             }
+
             Box(modifier = Modifier.fillMaxSize().then(backgroundModifier)) {
                 AppSnackbarBridge(controller = snackbarController)
                 content()

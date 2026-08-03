@@ -103,7 +103,7 @@ private val DarkColor = darkColorScheme(
 val colorPing = Color(0xFF009966) // Green
 val colorPingRed = Color(0xFFFF0099) // Pink Red
 val colorConfigType = Color(0xFFf97910) // Orange
-val colorFabActive = Color(0xFFf97910) // Orange
+val colorFabActive = Color(0xFF00BFFF) // Bright Blue
 val colorFabInactiveLight = Color(0xFF9C9C9C) // Gray
 val colorFabInactiveDark = Color(0xFF646464) // Dark Gray
 val dividerColorLight = Color(0xFFE0E0E0) // Light Gray
@@ -155,6 +155,7 @@ fun AppTheme(
     val colorScheme = if (darkTheme) DarkColor else LightColor
     val snackbarController = rememberAppSnackbarController()
     val view = LocalView.current
+
     if (!view.isInEditMode) {
         SideEffect {
             val activity = view.context as? Activity ?: return@SideEffect

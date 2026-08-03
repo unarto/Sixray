@@ -1,53 +1,158 @@
 package com.sixray.cepat
 
-/**
- * Application configuration constants.
- */
 object AppConfig {
-    const val ANG_PACKAGE = "com.sixray.cepat"
+    /** The application's package name. */
+    const val ANG_PACKAGE = BuildConfig.APPLICATION_ID
+    const val TAG = BuildConfig.APPLICATION_ID
 
-    // Preferences keys
-    const val PREF_ENABLE_LOCAL_PROXY = "pref_enable_local_proxy"
-    const val PREF_PROXY_SHARING = "pref_proxy_sharing_enabled"
-    const val PREF_IS_BOOTED = "pref_is_booted"
-    const val PREF_ROUTING_RULESETS = "pref_routing_rulesets"
-    const val PREF_LANGUAGE = "pref_language"
-    const val PREF_UI_MODE_NIGHT = "pref_ui_mode_night"
-    const val PREF_SPEED_ENABLED = "pref_speed_enabled"
+    /** Directory names used in the app's file system. */
+    const val DIR_ASSETS = "assets"
+    const val WEBDAV_BACKUP_DIR = "backups"
+    const val WEBDAV_BACKUP_FILE_NAME = "backup_ng.zip"
+
+    /** Legacy configuration keys. */
+    const val ANG_CONFIG = "ang_config"
+
+    // Default subscription ID for ungrouped servers
+    const val DEFAULT_SUBSCRIPTION_ID = "__default_subscription__"
+
+    /** Preferences mapped to MMKV storage. */
     const val PREF_SNIFFING_ENABLED = "pref_sniffing_enabled"
     const val PREF_ROUTE_ONLY_ENABLED = "pref_route_only_enabled"
-    const val PREF_ROUTING_CUSTOM = "pref_routing_custom"
+    const val PREF_PER_APP_PROXY = "pref_per_app_proxy"
+    const val PREF_PER_APP_PROXY_SET = "pref_per_app_proxy_set"
+    const val PREF_BYPASS_APPS = "pref_bypass_apps"
+
+    const val PREF_LOCAL_DNS_ENABLED = "pref_local_dns_enabled"
+    const val PREF_FAKE_DNS_ENABLED = "pref_fake_dns_enabled"
+    const val PREF_APPEND_HTTP_PROXY = "pref_append_http_proxy"
+    const val PREF_LOCAL_DNS_PORT = "pref_local_dns_port"
+    const val PREF_VPN_DNS = "pref_vpn_dns"
+    const val PREF_VPN_BYPASS_LAN = "pref_vpn_bypass_lan"
+    const val PREF_VPN_INTERFACE_ADDRESS_CONFIG_INDEX = "pref_vpn_interface_address_config_index"
     const val PREF_VPN_MTU = "pref_vpn_mtu"
+
+    const val PREF_ROUTING_DOMAIN_STRATEGY = "pref_routing_domain_strategy"
+    const val PREF_ROUTING_RULESET = "pref_routing_ruleset"
+    
+    const val PREF_MUX_ENABLED = "pref_mux_enabled"
+    const val PREF_MUX_CONCURRENCY = "pref_mux_concurrency"
+    const val PREF_MUX_XUDP_CONCURRENCY = "pref_mux_xudp_concurrency"
+    const val PREF_MUX_XUDP_QUIC = "pref_mux_xudp_quic"
+
     const val PREF_FRAGMENT_ENABLED = "pref_fragment_enabled"
     const val PREF_FRAGMENT_PACKETS = "pref_fragment_packets"
     const val PREF_FRAGMENT_LENGTH = "pref_fragment_length"
     const val PREF_FRAGMENT_INTERVAL = "pref_fragment_interval"
     const val PREF_FRAGMENT_MAXSPLIT = "pref_fragment_maxsplit"
-    const val PREF_MUX_ENABLED = "pref_mux_enabled"
-    const val PREF_MUX_CONCURRENCY = "pref_mux_concurrency"
-    const val PREF_MUX_XUDP_CONCURRENCY = "pref_mux_xudp_concurrency"
-    const val PREF_MUX_XUDP_QUIC = "pref_mux_xudp_quic"
+
     const val PREF_OBSERVATORY_LEAST_PING_INTERVAL = "pref_observatory_least_ping_interval"
     const val PREF_OBSERVATORY_LEAST_LOAD_INTERVAL = "pref_observatory_least_load_interval"
     const val PREF_OBSERVATORY_LEAST_LOAD_METHOD = "pref_observatory_least_load_method"
     const val PREF_OBSERVATORY_LEAST_LOAD_SAMPLING = "pref_observatory_least_load_sampling"
     const val PREF_OBSERVATORY_LEAST_LOAD_TIMEOUT = "pref_observatory_least_load_timeout"
+
+    const val SUBSCRIPTION_UPDATE_TASK_NAME = "subscription_updater"
+    const val SUBSCRIPTION_MIN_INTERVAL_MINUTES = 15L
+
+    const val PREF_SPEED_ENABLED = "pref_speed_enabled"
+    const val PREF_CONFIRM_REMOVE = "pref_confirm_remove"
+    const val PREF_DOUBLE_COLUMN_DISPLAY = "pref_double_column_display"
+    const val PREF_GROUP_ALL_DISPLAY = "pref_group_all_display"
+
+    const val PREF_LANGUAGE = "pref_language"
+    const val PREF_UI_MODE_NIGHT = "pref_ui_mode_night"
+
+    const val PREF_IPV6_ENABLED = "pref_ipv6_enabled"
+    const val PREF_PREFER_IPV6 = "pref_prefer_ipv6"
+    const val PREF_PROXY_SHARING = "pref_proxy_sharing_enabled"
+    const val PREF_ENABLE_LOCAL_PROXY = "pref_enable_local_proxy"
+    
+    const val PREF_SOCKS_PORT = "pref_socks_port"
+    const val PREF_DYNAMIC_SOCKS_PORT = "pref_dynamic_socks_port"
+    const val PREF_SOCKS_USERNAME = "pref_socks_username"
+    const val PREF_SOCKS_PASSWORD = "pref_socks_password"
+    const val PREF_SOCKS_ENABLE_UDP = "pref_socks_enable_udp"
+    const val PREF_REMOTE_DNS = "pref_remote_dns"
+    const val PREF_DOMESTIC_DNS = "pref_domestic_dns"
+    const val PREF_DNS_HOSTS = "pref_dns_hosts"
     const val PREF_DELAY_TEST_URL = "pref_delay_test_url"
     const val PREF_IP_API_URL = "pref_ip_api_url"
     const val PREF_LOGLEVEL = "pref_core_loglevel"
     const val PREF_OUTBOUND_DOMAIN_RESOLVE_METHOD = "pref_outbound_domain_resolve_method"
     const val PREF_MODE = "pref_mode"
+    
+    const val PREF_ROOT_MODE_ENABLE = "pref_root_mode_enabled"
+    const val PREF_ROOT_LAN_SHARING = "pref_root_lan_sharing"
+    const val PREF_IS_BOOTED = "pref_is_booted"
 
-    const val PREF_CONFIRM_REMOVE = "pref_confirm_remove"
-    const val PREF_DOUBLE_COLUMN_DISPLAY = "pref_double_column_display"
-    const val PREF_GROUP_ALL_DISPLAY = "pref_group_all_display"
-    const val PREF_PREFER_IPV6 = "pref_prefer_ipv6"
-    const val PREF_IPV6_ENABLED = "pref_ipv6_enabled"
-
-    // App URLs and endpoints
-    const val DELAY_TEST_URL = "https://www.google.com/generate_204"
-    const val DELAY_TEST_URL2 = "https://gstatic.com/generate_204"
+    const val PREF_CHECK_UPDATE_PRE_RELEASE = "pref_check_update_pre_release"
+    const val PREF_GEO_FILES_SOURCES = "pref_geo_files_sources"
+    
+    const val PREF_USE_HEV_TUNNEL = "pref_use_hev_tunnel_v2"
+    const val PREF_HEV_TUNNEL_LOGLEVEL = "pref_hev_tunnel_loglevel"
+    const val PREF_HEV_TUNNEL_RW_TIMEOUT = "pref_hev_tunnel_rw_timeout_v2"
+    
+    const val PREF_UPDATE_SUBSCRIPTION = "pref_update_subscription"
+    const val PREF_AUTO_TEST_AFTER_UPDATE_SUBSCRIPTION = "pref_auto_test_after_update_subscription"
+    const val PREF_AUTO_REMOVE_INVALID_AFTER_TEST = "pref_auto_remove_invalid_after_test"
+    const val PREF_AUTO_SORT_AFTER_TEST = "pref_auto_sort_after_test"
+    
     const val PREF_REAL_PING_CONCURRENCY = "pref_real_ping_concurrency"
+
+    /** Cache keys. */
+    const val CACHE_SUBSCRIPTION_ID = "cache_subscription_id"
+    
+    /** Protocol identifiers. */
+    const val PROTOCOL_FREEDOM = "freedom"
+
+    /** Broadcast actions. */
+    const val BROADCAST_ACTION_SERVICE = "$ANG_PACKAGE.action.service"
+    const val BROADCAST_ACTION_ACTIVITY = "$ANG_PACKAGE.action.activity"
+    const val BROADCAST_ACTION_WIDGET_CLICK = "$ANG_PACKAGE.action.widget.click"
+
+    /** Tasker extras. */
+    const val TASKER_EXTRA_BUNDLE = "com.twofortyfouram.locale.intent.extra.BUNDLE"
+    const val TASKER_EXTRA_STRING_BLURB = "com.twofortyfouram.locale.intent.extra.BLURB"
+    const val TASKER_EXTRA_BUNDLE_SWITCH = "tasker_extra_bundle_switch"
+    const val TASKER_EXTRA_BUNDLE_GUID = "tasker_extra_bundle_guid"
+    const val TASKER_DEFAULT_GUID = "Default"
+
+    /** Tags for different proxy modes. */
+    const val TAG_PROXY = "proxy"
+    const val TAG_DIRECT = "direct"
+    const val TAG_BLOCKED = "block"
+    const val TAG_FRAGMENT = "fragment"
+    const val TAG_DNS = "dns-module"
+    const val TAG_DOMESTIC_DNS = "domestic-dns"
+    const val TAG_BALANCER = "balancer-main"
+    const val TAG_BALANCER_PRE = "balancer"
+
+    /** Network-related constants. */
+    const val UPLINK = "uplink"
+    const val DOWNLINK = "downlink"
+
+    /** URLs for various resources. */
+    const val GITHUB_URL = "https://github.com"
+    const val GITHUB_RAW_URL = "https://raw.githubusercontent.com"
+    const val GITHUB_DOWNLOAD_URL = "$GITHUB_URL/%s/releases/latest/download"
+    const val ANDROID_PACKAGE_NAME_LIST_URL = "$GITHUB_RAW_URL/2dust/androidpackagenamelist/master/proxy.txt"
+    const val APP_URL = "$GITHUB_URL/2dust/v2rayNG"
+    const val APP_API_URL = "https://api.github.com/repos/2dust/v2rayNG/releases"
+    const val APP_ISSUES_URL = "$APP_URL/issues"
+    const val APP_WIKI_MODE = "$APP_URL/wiki/Mode"
+    const val APP_PRIVACY_POLICY = "$GITHUB_RAW_URL/2dust/v2rayNG/master/CR.md"
+    const val APP_PROMOTION_URL = "aHR0cHM6Ly85LjIzNDQ1Ni54eXovYWJjLmh0bWw="
+    const val TG_CHANNEL_URL = "https://t.me/github_2dust"
+    const val DELAY_TEST_URL = "https://www.gstatic.com/generate_204"
+    const val DELAY_TEST_URL2 = "https://www.google.com/generate_204"
+
+    const val OBSERVATORY_LEAST_PING_INTERVAL = "3m"
+    const val OBSERVATORY_LEAST_LOAD_INTERVAL = "5m"
+    const val OBSERVATORY_LEAST_LOAD_METHOD = "HEAD"
+    const val OBSERVATORY_LEAST_LOAD_SAMPLING = "2"
+    const val OBSERVATORY_LEAST_LOAD_TIMEOUT = "30s"
+//    const val IP_API_URL = "https://speed.cloudflare.com/meta"
     const val IP_API_URL = "https://api.ip.sb/geoip"
 
     /** DNS server addresses. */
@@ -92,10 +197,12 @@ object AppConfig {
     const val MSG_MEASURE_CONFIG_SUCCESS = 72
     const val MSG_MEASURE_CONFIG_NOTIFY = 73
     const val MSG_MEASURE_CONFIG_FINISH = 74
+
     const val MSG_SUB_UPDATE_START = 8
     const val MSG_SUB_UPDATE_CANCEL = 81
 
     /** Notification channel IDs and names. */
+    // Use a new ID because Android does not let an app raise an existing channel's importance.
     const val RAY_NG_CHANNEL_ID = "CORE_M_CH_ID_V2"
     const val RAY_NG_CHANNEL_NAME = "Core Background Service"
 
@@ -130,6 +237,9 @@ object AppConfig {
     const val ROOT_TUN_NAME = "utun7788"
     const val ROOT_TUN_ADDR_V4 = "198.18.0.1/15"
     const val ROOT_TUN_ADDR_V6 = "fdfe:dcba:9876::1/64"
+
+    // hev-socks5-tunnel run as a standalone root binary (reuses the same project already
+    // bundled for the VPN hev path; distinct filename from the JNI lib to avoid collision).
     const val ROOT_TUN2SOCKS_BIN = "libhevsockstun.so"
     const val ROOT_FWD_CHAIN = "CORE_FWD"   // FORWARD chain for LAN/tethering sharing
     const val ROOT_DNS_CHAIN = "CORE_DNS"   // nat chain for tethered-client DNS DNAT
